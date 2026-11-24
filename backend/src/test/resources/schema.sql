@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS sys_user (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50) NOT NULL UNIQUE,
+ password_hash VARCHAR(100) NOT NULL, display_name VARCHAR(100) NOT NULL, enabled BOOLEAN NOT NULL DEFAULT TRUE
+);
+CREATE TABLE IF NOT EXISTS sys_role (id BIGINT AUTO_INCREMENT PRIMARY KEY, code VARCHAR(30) NOT NULL UNIQUE, name VARCHAR(50) NOT NULL);
+CREATE TABLE IF NOT EXISTS sys_user_role (
+ user_id BIGINT NOT NULL, role_id BIGINT NOT NULL, PRIMARY KEY(user_id,role_id),
+ FOREIGN KEY(user_id) REFERENCES sys_user(id), FOREIGN KEY(role_id) REFERENCES sys_role(id)
+);
+CREATE TABLE IF NOT EXISTS product (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, description VARCHAR(2000) NOT NULL DEFAULT '',
+ status VARCHAR(20) NOT NULL DEFAULT 'OFF_SALE',
+ CONSTRAINT ck_product_status CHECK(status IN ('ON_SALE','OFF_SALE')),
+ INDEX idx_product_status_id(status,id)
+);
+CREATE TABLE IF NOT EXISTS sku (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY, product_id BIGINT NOT NULL, code VARCHAR(64) NOT NULL UNIQUE,
+ name VARCHAR(100) NOT NULL, price DECIMAL(12,2) NOT NULL, status VARCHAR(20) NOT NULL,
+ FOREIGN KEY(product_id) REFERENCES product(id), INDEX idx_sku_product(product_id),
+ CONSTRAINT ck_sku_price CHECK(price>0), CONSTRAINT ck_sku_status CHECK(status IN ('ON_SALE','OFF_SALE'))
+);
+CREATE TABLE IF NOT EXISTS stock (
+ id BIGINT AUTO_INCREMENT PRIMARY KEY, sku_id BIGINT NOT NULL UNIQUE,
+ quantity INT NOT NULL DEFAULT 0, reserved_quantity INT NOT NULL DEFAULT 0,
+ FOREIGN KEY(sku_id) REFERENCES sku(id),
+ CONSTRAINT ck_stock_quantity CHECK(quantity>=0 AND reserved_quantity>=0 AND reserved_quantity<=quantity)
+);

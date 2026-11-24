@@ -1,0 +1,4 @@
+app:
+  cors-origins: ${CORS_ORIGINS}
+server:
+  shutdown: graceful

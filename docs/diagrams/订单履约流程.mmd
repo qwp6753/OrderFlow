@@ -1,0 +1,12 @@
+flowchart TD
+  Create[创建订单 多 SKU 同事务预占] --> Pay[PENDING_PAYMENT]
+  Pay -->|模拟付款| Pending[PENDING_SHIPMENT]
+  Pay -->|取消 释放预占| Cancel[CANCELED]
+  Pending -->|取消 释放预占| Cancel
+  Pending -->|仓库发货 同减实物与预占| Ship[SHIPPED]
+  Ship -->|后台模拟确认收货 不动库存| Done[COMPLETED]
+  Done -->|单条明细部分退货申请| Review[PENDING_REVIEW]
+  Review -->|拒绝 恢复可申请数量| Reject[REJECTED]
+  Review -->|审核通过| Receipt[PENDING_RECEIPT]
+  Receipt -->|异常备注 状态不变| Receipt
+  Receipt -->|全部验收合格 实物入库| Returned[售后 COMPLETED 原订单不变]

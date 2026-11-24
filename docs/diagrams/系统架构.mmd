@@ -1,0 +1,7 @@
+flowchart LR
+  Browser[浏览器] --> Vue[Vue 3 后台]
+  Vue -->|HTTP /api + Bearer JWT| Security[Spring Security]
+  Security --> Controller[REST Controller]
+  Controller --> Service[业务 Service 与事务]
+  Service --> Mapper[MyBatis-Plus 与自定义 SQL]
+  Mapper --> DB[(MySQL 8 单库)]

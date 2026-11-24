@@ -1,0 +1,28 @@
+{
+  "name": "orderflow-admin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "vue": "3.5.44",
+    "vue-router": "4.6.3",
+    "pinia": "3.0.3",
+    "axios": "1.21.0",
+    "element-plus": "2.11.5",
+    "chart.js": "4.5.1"
+  },
+  "devDependencies": {
+    "vite": "7.3.7",
+    "@vitejs/plugin-vue": "6.0.1",
+    "@playwright/test": "1.56.1"
+  }
+}

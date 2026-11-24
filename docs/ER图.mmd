@@ -1,0 +1,113 @@
+erDiagram
+  sys_user ||--o{ sys_user_role : has
+  sys_role ||--o{ sys_user_role : grants
+  product ||--o{ sku : contains
+  sku ||--|| stock : owns
+  sys_user ||--o{ sales_order : creates
+  sales_order ||--|{ order_item : contains
+  sku ||--o{ order_item : references
+  sku ||--o{ stock_movement : changes
+  sales_order o|--o{ stock_movement : records
+  sys_user ||--o{ stock_movement : operates
+  sales_order ||--o| shipment : fulfills
+  sys_user o|--o{ shipment : ships
+  sales_order ||--o{ return_request : receives
+  sys_user ||--o{ return_request : creates
+  sys_user o|--o{ return_request : reviews
+  sys_user o|--o{ return_request : receives
+  return_request ||--|{ return_item : contains
+  order_item ||--o{ return_item : returns
+  sys_user {
+    bigint id PK
+    varchar username UK
+    varchar password_hash
+    boolean enabled
+  }
+  sys_role {
+    bigint id PK
+    varchar code UK
+  }
+  sys_user_role {
+    bigint user_id PK,FK
+    bigint role_id PK,FK
+  }
+  product {
+    bigint id PK
+    varchar name
+    varchar status
+  }
+  sku {
+    bigint id PK
+    bigint product_id FK
+    varchar code UK
+    decimal price
+    varchar status
+  }
+  stock {
+    bigint id PK
+    bigint sku_id UK,FK
+    int quantity
+    int reserved_quantity
+  }
+  sales_order {
+    bigint id PK
+    varchar order_no UK
+    varchar remark
+    varchar status
+    decimal total_amount
+    datetime completed_at
+    bigint created_by FK
+  }
+  order_item {
+    bigint id PK
+    bigint order_id FK
+    bigint sku_id FK
+    varchar product_name
+    varchar sku_code
+    varchar sku_name
+    decimal unit_price
+    int quantity
+  }
+  stock_movement {
+    bigint id PK
+    bigint sku_id FK
+    bigint order_id FK
+    varchar movement_type
+    int quantity_delta
+    int reserved_delta
+    int quantity_after
+    int reserved_after
+    varchar business_key UK
+    varchar remark
+    bigint operator_id FK
+  }
+  shipment {
+    bigint id PK
+    bigint order_id UK,FK
+    varchar status
+    varchar carrier
+    varchar tracking_no
+    datetime shipped_at
+    bigint shipped_by FK
+  }
+  return_request {
+    bigint id PK
+    varchar return_no UK
+    bigint order_id FK
+    varchar status
+    bigint created_by FK
+    bigint reviewed_by FK
+    datetime reviewed_at
+    varchar rejection_reason
+    bigint received_by FK
+    datetime received_at
+    varchar receipt_remark
+    datetime updated_at
+  }
+  return_item {
+    bigint id PK
+    bigint return_id FK
+    bigint order_item_id FK
+    int quantity
+    decimal refund_amount
+  }

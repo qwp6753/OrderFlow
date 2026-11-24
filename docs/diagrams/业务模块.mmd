@@ -1,0 +1,9 @@
+flowchart TD
+  Auth[auth 认证与账号] --> Security[config 安全配置]
+  Orders[orders 订单履约] --> Catalog[catalog 商品 SKU 与 StockMapper]
+  Orders --> Ledger[订单明细 库存流水 物流记录]
+  Returns[returns 售后] --> Orders
+  Returns --> Inventory[inventory 入库与库存查询]
+  Inventory --> Catalog
+  Inventory --> Ledger
+  Analytics[analytics 运营聚合] --> DB[(订单 售后 库存 商品表)]
